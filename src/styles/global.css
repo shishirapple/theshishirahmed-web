@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -101,8 +100,14 @@ textarea:focus-visible {
 }
 
 @media (min-width: 768px) {
+  .work-grid.stagger {
+    align-items: start;
+  }
   .work-grid.stagger .work-card:nth-child(even) {
     margin-top: 64px;
+  }
+  .work-grid.stagger .work-card:nth-child(odd) {
+    margin-bottom: 64px;
   }
 }
 

@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
+import { Image } from "astro:assets";
 import { projects } from "../../data/projects";
 
 export function getStaticPaths() {
@@ -29,7 +30,7 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
 
 <Layout
   title={`${project.name} — Shishir Ahmed`}
-  description={`${project.name}: ${project.tagline}. A project by Shishir Ahmed, WordPress Developer & Digital Marketer.`}
+  description={project.description}
 >
   <Navbar currentPath="/work" />
 
@@ -42,17 +43,35 @@ const nextProject = projects[(currentIndex + 1) % projects.length];
         </svg>
       </a>
       <h1 class="font-display font-bold text-4xl md:text-6xl tracking-tight">{project.name}</h1>
-      <p class="mt-4 text-(--color-muted) max-w-xl">{project.tagline}</p>
+      <p class="mt-3 text-sm font-semibold uppercase tracking-wide text-(--color-muted)">{project.tagline}</p>
+      <p class="mt-6 text-(--color-muted) max-w-2xl leading-relaxed">{project.description}</p>
+
+      {project.url && (
+        <a
+          href={project.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="nav-link chip chip-dark mt-8 inline-flex"
+        >
+          <span>Visit live site</span>
+          <svg class="nav-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      )}
     </section>
 
     <section class="max-w-[1280px] mx-auto px-6 md:px-12 pb-24 md:pb-32">
       <div class="rounded-xl overflow-hidden border border-(--color-border) bg-(--color-surface)">
         {img && (
-          <img
-            src={img.src}
-            width={img.width}
-            height={img.height}
+          <Image
+            src={img}
             alt={`Screenshot of ${project.name} website`}
+            width={1280}
+            height={960}
+            format="webp"
+            quality={80}
+            loading="eager"
             class="w-full h-auto"
           />
         )}

@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+import Hero from "../components/Hero.astro";
+import WorkGrid from "../components/WorkGrid.astro";
+import { homeProjects } from "../data/projects";
+---
+
+<Layout
+  title="Shishir Ahmed — WordPress Developer & Digital Marketer"
+  description="Shishir Ahmed is a WordPress Developer and Digital Marketer based in Rajshahi, Bangladesh, building high-performance websites and full-funnel marketing campaigns for clients worldwide."
+>
+  <Navbar currentPath="/" />
+
+  <main>
+    <Hero />
+
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 pb-16 md:pb-24">
+      <a href="/work" class="nav-link chip mb-10 md:mb-12 inline-flex">
+        <span>See all work</span>
+        <svg class="nav-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <WorkGrid projects={homeProjects} stagger={true} />
+    </section>
+
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 py-24 md:py-40">
+      <h2 class="font-display font-bold text-3xl md:text-5xl leading-tight">
+        <span class="block">I don't know what</span>
+        <span class="block text-(--color-muted)">you're looking for.</span>
+      </h2>
+      <p class="mt-6 max-w-md text-(--color-muted)">
+        For the people who appreciate thoughtful work over flashy promises— Hi, I'm Shishir.
+      </p>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

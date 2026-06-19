@@ -1,0 +1,26 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import WorkGrid from "../../components/WorkGrid.astro";
+import { projects } from "../../data/projects";
+---
+
+<Layout
+  title="Work — Shishir Ahmed"
+  description="A collection of WordPress development and digital marketing projects by Shishir Ahmed, spanning automotive, food & beverage, real estate, home services, and e-commerce clients."
+>
+  <Navbar currentPath="/work" />
+
+  <main>
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-12 md:pb-16">
+      <h1 class="font-display font-bold text-5xl md:text-7xl tracking-tight">WORK</h1>
+    </section>
+
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 pb-24 md:pb-32">
+      <WorkGrid projects={projects} stagger={false} />
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

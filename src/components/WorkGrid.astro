@@ -1,0 +1,47 @@
+---
+import type { Project } from "../data/projects";
+
+export interface Props {
+  projects: Project[];
+  stagger?: boolean;
+}
+
+const { projects, stagger = false } = Astro.props;
+
+// Resolve image imports dynamically
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/projects/*.{png,jpg,jpeg}",
+  { eager: true }
+);
+
+function getImage(filename: string) {
+  const match = Object.entries(images).find(([path]) => path.endsWith(filename));
+  return match?.[1]?.default;
+}
+---
+
+<div class:list={["work-grid grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12", stagger ? "stagger" : ""]}>
+  {projects.map((project) => {
+    const img = getImage(project.image);
+    return (
+      <article class="work-card group">
+        <a href={`/work/${project.slug}`} class="block">
+          <div class="relative overflow-hidden rounded-xl bg-(--color-surface) border border-(--color-border) aspect-[4/3]">
+            {img && (
+              <img
+                src={img.src}
+                width={img.width}
+                height={img.height}
+                alt={`Screenshot of ${project.name} website`}
+                loading="lazy"
+                class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
+              />
+            )}
+          </div>
+          <h3 class="mt-4 font-display font-bold text-lg tracking-tight">{project.name}</h3>
+          <p class="mt-1 text-sm text-(--color-muted)">{project.tagline}</p>
+        </a>
+      </article>
+    );
+  })}
+</div>

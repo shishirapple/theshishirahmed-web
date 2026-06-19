@@ -1,0 +1,76 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import { projects } from "../../data/projects";
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/projects/*.{png,jpg,jpeg}",
+  { eager: true }
+);
+function getImage(filename: string) {
+  const match = Object.entries(images).find(([path]) => path.endsWith(filename));
+  return match?.[1]?.default;
+}
+const img = getImage(project.image);
+
+const currentIndex = projects.findIndex((p) => p.slug === project.slug);
+const nextProject = projects[(currentIndex + 1) % projects.length];
+---
+
+<Layout
+  title={`${project.name} — Shishir Ahmed`}
+  description={`${project.name}: ${project.tagline}. A project by Shishir Ahmed, WordPress Developer & Digital Marketer.`}
+>
+  <Navbar currentPath="/work" />
+
+  <main>
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-8 md:pb-12">
+      <a href="/work" class="nav-link chip mb-10 inline-flex">
+        <span>Back to Work</span>
+        <svg class="nav-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <h1 class="font-display font-bold text-4xl md:text-6xl tracking-tight">{project.name}</h1>
+      <p class="mt-4 text-(--color-muted) max-w-xl">{project.tagline}</p>
+    </section>
+
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 pb-24 md:pb-32">
+      <div class="rounded-xl overflow-hidden border border-(--color-border) bg-(--color-surface)">
+        {img && (
+          <img
+            src={img.src}
+            width={img.width}
+            height={img.height}
+            alt={`Screenshot of ${project.name} website`}
+            class="w-full h-auto"
+          />
+        )}
+      </div>
+    </section>
+
+    <section class="max-w-[1280px] mx-auto px-6 md:px-12 pb-24 md:pb-32">
+      <div class="border-t border-(--color-border) pt-12 flex items-center justify-between">
+        <p class="text-sm text-(--color-muted)">Next project</p>
+        <a href={`/work/${nextProject.slug}`} class="nav-link chip chip-dark">
+          <span>{nextProject.name}</span>
+          <svg class="nav-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 9L9 3M9 3H4M9 3V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

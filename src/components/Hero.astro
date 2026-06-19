@@ -9,13 +9,12 @@
     </span>
   </h1>
 
-  <div class="mt-4 md:mt-2 flex flex-wrap items-baseline gap-x-3">
+  <div class="mt-4 md:mt-2 flex flex-nowrap items-baseline gap-x-3 overflow-x-hidden">
     <svg
       id="hero-designer-svg"
-      width="220"
-      height="48"
-      viewBox="0 0 220 48"
-      class="h-9 md:h-10 w-auto overflow-visible"
+      viewBox="0 0 240 48"
+      preserveAspectRatio="xMinYMid meet"
+      class="h-9 md:h-10 w-auto shrink-0 overflow-visible"
       aria-hidden="true"
     >
       <text
@@ -30,8 +29,8 @@
     </svg>
     <span class="sr-only">Designer.</span>
 
-    <span class="overflow-hidden inline-block align-bottom">
-      <span id="hero-strategist" class="hero-slide-word font-display text-2xl md:text-3xl text-(--color-muted)">
+    <span class="overflow-hidden inline-block align-bottom shrink-0">
+      <span id="hero-strategist" class="hero-slide-word font-display text-2xl md:text-3xl text-(--color-muted) whitespace-nowrap">
         Strategist
       </span>
     </span>
@@ -53,9 +52,19 @@
         "style",
         `stroke-dasharray:${length}; stroke-dashoffset:${length};`
       );
+      const svg = document.getElementById("hero-designer-svg");
+      if (svg) {
+        svg.setAttribute("viewBox", `0 0 ${Math.ceil(length) + 8} 48`);
+      }
     };
     measure();
     window.addEventListener("resize", measure);
+
+    // Re-measure once the custom font has actually loaded — getComputedTextLength()
+    // can return an incorrect (fallback-font) value if called before font-load completes.
+    if ("fonts" in document) {
+      (document as any).fonts.ready.then(measure).catch(() => {});
+    }
 
     const playAnimation = () => {
       // Reset first so it can replay

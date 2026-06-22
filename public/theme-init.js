@@ -1,15 +1,17 @@
 // Runs synchronously in <head> before paint.
-// Always re-evaluates system preference fresh — no localStorage persistence,
-// per spec: manual toggle choice does NOT persist across visits.
+// Persists user's theme choice in localStorage.
+// Falls back to system preference if no user choice exists.
 (function () {
   try {
+    var storedTheme = localStorage.getItem("theme");
     var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (prefersDark) {
+    
+    if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
   } catch (e) {
-    // matchMedia unsupported — default to light
+    // localStorage or matchMedia unsupported — default to light
   }
 })();

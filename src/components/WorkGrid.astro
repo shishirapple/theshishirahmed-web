@@ -25,13 +25,13 @@ function getImage(filename: string) {
   {projects.map((project, index) => {
     const img = getImage(project.image);
     return (
-      <article class="work-card group">
+      <article class="work-card group opacity-0" data-work-index={index}>
         <a href={`/work/${project.slug}`} class="block">
           <div class="relative overflow-hidden rounded-xl bg-(--color-surface) border border-(--color-border) aspect-[4/3]">
             {img && (
               <Image
                 src={img}
-                alt={`Screenshot of ${project.name} website`}
+                alt={`Screenshot of ${project.name} website - ${project.tagline}`}
                 width={760}
                 height={570}
                 loading={index < 2 ? "eager" : "lazy"}
@@ -49,3 +49,39 @@ function getImage(filename: string) {
     );
   })}
 </div>
+
+<script>
+  import gsap from "gsap";
+  import ScrollTrigger from "gsap/ScrollTrigger";
+  
+  gsap.registerPlugin(ScrollTrigger);
+
+  function setupWorkGridAnimation() {
+    const workCards = document.querySelectorAll(".work-card");
+    
+    if (workCards.length === 0) return;
+
+    // Kill any existing animations
+    gsap.killTweensOf(workCards);
+    
+    // Reset state
+    gsap.set(workCards, { opacity: 0, y: 40 });
+
+    // Create staggered animation with ScrollTrigger
+    gsap.to(workCards, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power3.out",
+      stagger: 0.1,
+      scrollTrigger: {
+        trigger: ".work-grid",
+        start: "top 80%",
+        toggleActions: "play none none reverse",
+      },
+    });
+  }
+
+  setupWorkGridAnimation();
+  document.addEventListener("astro:after-swap", setupWorkGridAnimation);
+</script>

@@ -33,6 +33,7 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
   transition: background-color 250ms ease, color 250ms ease;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -99,6 +100,30 @@ textarea:focus-visible {
   transform: translateY(-1px);
 }
 
+/* Mobile responsive improvements */
+@media (max-width: 767px) {
+  .nav-link {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  
+  header nav {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  header nav > div:first-child {
+    order: 2;
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  
+  header nav > div:last-child {
+    order: 1;
+  }
+}
+
 @media (min-width: 768px) {
   .work-grid.stagger {
     align-items: start;
@@ -113,16 +138,7 @@ textarea:focus-visible {
 
 .hero-reveal-text {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(18px);
-  filter: blur(4px);
-  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1), transform 600ms cubic-bezier(0.16, 1, 0.3, 1), filter 600ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.hero-reveal-text.in-view {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
+  will-change: opacity, transform, filter;
 }
 
 /* Formspree AJAX: show success/error containers once the library populates them */
@@ -136,4 +152,39 @@ textarea:focus-visible {
 
 [data-fs-submit-btn][disabled] {
   cursor: not-allowed;
+}
+
+/* Work card animations */
+.work-card {
+  will-change: transform, opacity;
+}
+
+.work-card .relative {
+  will-change: transform;
+}
+
+/* Chip animations for theme toggle */
+#theme-toggle {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Image optimization hints */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Ensure content doesn't overflow on small screens */
+@media (max-width: 640px) {
+  h1 {
+    word-break: break-word;
+  }
+  
+  .chip {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
 }

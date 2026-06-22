@@ -3,8 +3,8 @@
 
 <section class="max-w-[1280px] mx-auto px-6 md:px-12 pt-16 md:pt-24 pb-16 md:pb-24" id="hero">
   <h1 class="font-display font-bold leading-[0.95] tracking-tight flex flex-wrap items-center gap-x-3 gap-y-2">
-    <span class="text-[15vw] md:text-[7vw] lg:text-[88px]">SHISHIR AHMED</span>
-    <span class="hidden md:inline-block text-(--color-border) text-[7vw] lg:text-[88px] mx-1">|</span>
+    <span class="text-[15vw] md:text-[7vw] lg:text-[88px] hero-reveal-text" data-hero="name">SHISHIR AHMED</span>
+    <span class="hidden md:inline-block text-(--color-border) text-[7vw] lg:text-[88px] mx-1 hero-reveal-text" data-hero="separator">|</span>
 
     <span class="inline-flex flex-col leading-tight">
       <span id="hero-designer" class="hero-reveal-text font-display font-bold text-2xl md:text-3xl">
@@ -16,31 +16,86 @@
     </span>
   </h1>
 
-  <p class="mt-4 font-display text-2xl md:text-3xl text-(--color-muted)">with a marketing mind</p>
+  <p class="mt-4 font-display text-2xl md:text-3xl text-(--color-muted) hero-reveal-text" data-hero="tagline">with a marketing mind</p>
 </section>
 
 <script>
+  import gsap from "gsap";
+
   function setupHeroAnimation() {
     const hero = document.getElementById("hero");
-    const designer = document.getElementById("hero-designer");
-    const strategist = document.getElementById("hero-strategist");
+    const revealElements = hero?.querySelectorAll(".hero-reveal-text");
 
-    if (!hero || !designer || !strategist) return;
+    if (!hero || !revealElements) return;
+
+    // Kill any existing tweens on these elements
+    gsap.killTweensOf(revealElements);
+
+    // Reset initial state
+    gsap.set(revealElements, {
+      opacity: 0,
+      y: 18,
+      filter: "blur(4px)",
+    });
 
     const playAnimation = () => {
-      designer.classList.remove("in-view");
-      strategist.classList.remove("in-view");
-      void (designer as HTMLElement).offsetWidth;
-
-      requestAnimationFrame(() => {
-        designer.classList.add("in-view");
-        setTimeout(() => strategist.classList.add("in-view"), 120);
+      const tl = gsap.timeline();
+      
+      // Animate name first
+      tl.to(hero.querySelector('[data-hero="name"]'), {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.8,
+        ease: "power3.out",
       });
+
+      // Animate separator if visible
+      const separator = hero.querySelector('[data-hero="separator"]');
+      if (separator && window.getComputedStyle(separator).display !== "none") {
+        tl.to(separator, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.6,
+          ease: "power3.out",
+        }, "-=0.4");
+      }
+
+      // Animate designer and strategist
+      tl.to("#hero-designer", {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.6,
+        ease: "power3.out",
+      }, "-=0.4");
+
+      tl.to("#hero-strategist", {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.6,
+        ease: "power3.out",
+      }, "-=0.3");
+
+      // Animate tagline
+      tl.to(hero.querySelector('[data-hero="tagline"]'), {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.6,
+        ease: "power3.out",
+      }, "-=0.3");
     };
 
     const resetAnimation = () => {
-      designer.classList.remove("in-view");
-      strategist.classList.remove("in-view");
+      gsap.to(revealElements, {
+        opacity: 0,
+        y: 18,
+        filter: "blur(4px)",
+        duration: 0.3,
+      });
     };
 
     const observer = new IntersectionObserver(
@@ -57,6 +112,9 @@
     );
 
     observer.observe(hero);
+
+    // Cleanup on astro:page-transition
+    return () => observer.disconnect();
   }
 
   setupHeroAnimation();
